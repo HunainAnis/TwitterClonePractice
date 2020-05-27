@@ -4,7 +4,7 @@ import tweets from './tweets'
 import users from './users'
 
 export default combineReducers({
+    users,
     authedUser,
-    tweets,
-    users
+    tweets
 })
