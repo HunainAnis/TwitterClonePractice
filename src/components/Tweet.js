@@ -1,9 +1,21 @@
 import React from 'react'
 import { formatTweet, formatDate } from '../utils/helpers'
 import { connect } from 'react-redux'
-// import TiArrowBackOutline from 'react-icons/lib/ti/arrow-back-outline'
+import { TiArrowBackOutline,TiHeartOutline, TiHeartFullOutline } from 'react-icons/ti'
+import { handleToggleTweet } from '../actions/tweets'
 
 class Tweet extends React.Component {
+
+    handleLike(e) {
+        e.preventDefault()
+
+        const { dispatch, tweet, authedUser } = this.props
+        dispatch(handleToggleTweet({
+            id:tweet.id,
+            hasLiked:tweet.hasLiked,
+            authedUser
+        }))
+    }
 
     toParent(e, id) {
         e.preventDefault()
@@ -21,7 +33,7 @@ class Tweet extends React.Component {
         }
 
         const {
-            name, avatar, timestamp, text, hasLiked, likes, replines, id, parent
+            name, avatar, timestamp, text, hasLiked, likes, replies, id, parent
         } = tweet
         return(
             <div className='tweet'>
@@ -31,6 +43,7 @@ class Tweet extends React.Component {
                     className='avatar'
                 />
                 <div className='tweet-info'>
+                    <div>
                     <span>{name}</span>
                     <div>{formatDate(timestamp)}</div>
                     {parent && (
@@ -38,10 +51,20 @@ class Tweet extends React.Component {
                             Replying to @{parent.author}
                         </button>
                     )}
+                    <p>{text}</p>
                 </div>
                 <div className='tweet-icons'>
                         <TiArrowBackOutline className='tweet-icon' />
+                    <span>{replies !== 0 && replies}</span>
+                    <button className='heart-button' onClick={(e)=>this.handleLike(e)}>
+                        {hasLiked === true ?
+                            <TiHeartFullOutline color='#e0245e' className='tweet-icon'/> :
+                            <TiHeartOutline className='tweet-icon' />}
+                        <span>{likes !== 0 && likes}</span>
+                    </button>
                 </div>
+                </div>
+
             </div>
         )
     }
